@@ -1,12 +1,7 @@
 """
 WasteX dashboard | Data layer.
 
-Reads the four operational sheets from a public Google Spreadsheet (no
-API credentials required) and runs the same 10-anomaly validation that
-ships in the production pipeline.
-
-Returned to the UI as a single :class:`DataBundle` dataclass that bundles
-the four CLEANED frames + the VALIDATION_QUEUE.
+Reads the four operational sheets from a public Google Spreadsheet 
 """
 from __future__ import annotations
 
@@ -24,6 +19,11 @@ import streamlit as st
 # ─────────────────────────────────────────────────────────────────────── #
 # Configuration                                                           #
 # ─────────────────────────────────────────────────────────────────────── #
+"""
+Catatan : copy google sheet yang diberikan, untuk membantu full akses
+
+Link Google Sheet copy : https://docs.google.com/spreadsheets/d/1sNOPpAa90NfMp14HoW0w7UrdCdEusgUslaZlHKeY7vs/edit?usp=sharing
+"""
 
 DEFAULT_SHEET_URL = (
     "https://docs.google.com/spreadsheets/d/"
@@ -43,6 +43,17 @@ VALID_APPLICATION_TYPES = {
     "Sale-Pure Biochar",
     "Sale-Charged Biochar",
 }
+
+"""
+Menambahkan ambang batas (threshold)
+WEIGHT_DISCREPANCY_PCT = 0.05 (5%): Batas selisih bag weight. Jika bag weight saat diaplikasikan berbeda lebih dari 5% dibanding saat diproduksi, sistem akan mencatatnya sebagai anomali (Tipe 8).
+
+BATCH_SUM_PCT = 0.02 (2%): Batas toleransi persentase selisih total berat seluruh kantong dalam satu batch dibandingkan dengan total produksi yang diinput (Tipe 9).
+
+BATCH_SUM_KG = 2.0: Batas toleransi absolut (dalam kilogram) untuk selisih total berat batch. Data dianggap anomali hanya jika selisihnya melebihi persentase (2%) dan melebihi 2 kg.
+
+ACTIVITY_ID_LAG_DAYS = 30: Jarak waktu maksimal yang masuk akal (30 hari) antara tanggal yang tertera di activity_id dengan waktu data tersebut diinput ke sistem (Timestamp). Jika lebih dari 30 hari, dianggap mencurigakan (Tipe 5).
+"""
 
 WEIGHT_DISCREPANCY_PCT = 0.05
 BATCH_SUM_PCT = 0.02
@@ -194,7 +205,7 @@ def _validate(raw: dict[str, pd.DataFrame]) -> DataBundle:
     bag_app = raw["bag_application"].copy().reset_index(drop=True)
 
     # ── bag_production ───────────────────────────────────────────────── #
-    # TYPE 1 — comma decimals (auto-fix)
+    # TYPE 1 — comma decimals (temuan auto-fix)
     if "weight" in bag_prod.columns:
         for idx, raw_w in bag_prod["weight"].items():
             if isinstance(raw_w, str):
