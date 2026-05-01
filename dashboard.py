@@ -508,46 +508,48 @@ with tab_app:
 
         with c2:
             section("Geography", "Application <em>locations</em>")
-            map_df = app_f.copy()
-            if "lat_lng" in map_df.columns:
-                ll = map_df["lat_lng"].astype(str).str.split(",", expand=True)
-                if ll.shape[1] >= 2:
-                    map_df["lat"] = pd.to_numeric(ll[0], errors="coerce")
-                    map_df["lon"] = pd.to_numeric(ll[1], errors="coerce")
-            if {"lat", "lon"}.issubset(map_df.columns) \
-                    and map_df["lat"].notna().any():
-                pts = map_df.dropna(subset=["lat", "lon"])
-                fig = px.scatter_map(
-                    pts, lat="lat", lon="lon",
-                    hover_name="activity_id",
-                    hover_data={
-                        "lat": False, "lon": False,
-                        "application_type": True,
-                        "total_weight": ":,.1f",
-                    } if "application_type" in pts.columns else None,
-                    color_discrete_sequence=[BIOCHAR],
-                    size_max=14, zoom=5, height=320,
-                ) if hasattr(px, "scatter_map") else px.scatter_mapbox(
-                    pts, lat="lat", lon="lon",
-                    hover_name="activity_id",
-                    color_discrete_sequence=[BIOCHAR],
-                    size_max=14, zoom=5, height=320,
-                )
-                fig.update_layout(
-                    map_style="carto-positron",
-                    mapbox_style="carto-positron",
-                    margin=dict(l=0, r=0, t=10, b=0),
-                )
-                st.plotly_chart(fig, use_container_width=True)
+            if "location" in app_f.columns:
+                coords = app_f["location"].dropna().astype(str).str.split(",", expand=True)
+                if coords.shape[1] >= 2:
+                    try:
+                        map_df = pd.DataFrame({
+                            "lat": pd.to_numeric(coords[0], errors="coerce"),
+                            "lon": pd.to_numeric(coords[1], errors="coerce"),
+                            "label": app_f["activity_id"],
+                            "type": app_f.get("application_type", ""),
+                            "weight": app_f.get("total_weight", 0),
+                        }).dropna(subset=["lat", "lon"])
+                        if not map_df.empty:
+                            fig = px.scatter_map(
+                                map_df, lat="lat", lon="lon",
+                                size="weight", hover_name="label",
+                                hover_data={
+                                    "lat": False, "lon": False,
+                                    "type": True, "weight": ":,.1f",
+                                },
+                                color_discrete_sequence=[BIOCHAR],
+                                zoom=8, height=320,
+                            )
+                            fig.update_layout(
+                                map_style="open-street-map",
+                                margin=dict(l=0, r=0, t=10, b=0),
+                            )
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info("No valid coordinates in the current filter.")
+                    except Exception as exc:
+                        st.warning(f"Could not render map: {exc}")
+                else:
+                    st.info("Location column does not contain parseable coordinates.")
             else:
-                st.info("No coordinates available in the current filter.")
+                st.info("No location column available.")
 
         section("Inventory", "Application <em>batches</em>")
         if not app_f.empty:
             cols = [c for c in [
                 "activity_id", "Timestamp", "username", "application_type",
                 "total_weight", "purpose", "charging_material",
-                "lat_lng",
+                "location",
             ] if c in app_f.columns]
             df = app_f[cols].copy()
             rename = {
@@ -555,7 +557,7 @@ with tab_app:
                 "username": "Operator", "application_type": "Type",
                 "total_weight": "Weight (kg)", "purpose": "Purpose",
                 "charging_material": "Charging material",
-                "lat_lng": "Location",
+                "location": "Location",
             }
             df = df.rename(columns={k: v for k, v in rename.items()
                                     if k in df.columns})
