@@ -40,7 +40,7 @@ SEQUENTIAL_GREEN = [
 
 # ─────────────────── Plotly template ───────────────────
 def install_plotly_template() -> None:
-    """Register and activate the WasteX editorial template."""
+    """Register and activate the SB-Geocarbon editorial template."""
     template = go.layout.Template()
     template.layout = go.Layout(
         font=dict(family="DM Sans, system-ui, sans-serif",
@@ -75,8 +75,8 @@ def install_plotly_template() -> None:
             bordercolor=INK,
         ),
     )
-    pio.templates["wastex"] = template
-    pio.templates.default = "wastex"
+    pio.templates["SB-Geocarbon"] = template
+    pio.templates.default = "SB-Geocarbon"
 
 
 # ─────────────────── Global CSS ───────────────────
