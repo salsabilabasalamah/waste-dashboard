@@ -38,14 +38,14 @@ from theme import (
 # ─────────────────────────────────────────────────────────────────────── #
 
 st.set_page_config(
-    page_title="WasteX | Operations Dashboard",
+    page_title="Salsa | Operations Dashboard",
     page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         "Get help": None,
         "Report a bug": None,
-        "About": "WasteX Operations Dashboard — built for the Data Analyst skills test.",
+        "About": "Operations Dashboard — built for the Data Analyst Portofolio.",
     },
 )
 install_plotly_template()
@@ -237,11 +237,11 @@ st.markdown(
     f"""
     <div class='brand-band'>
         <div class='brand-eyebrow'>Operations Intelligence · 2024 Q4</div>
-        <h1 class='brand-title'>WasteX <em>Biochar</em> Operations</h1>
+        <h1 class='brand-title'><em>Biochar</em> Operations</h1>
         <div class='brand-sub'>
             A live snapshot of the biochar production and field-application
             pipeline — pulled directly from the operational Google Sheet,
-            cleaned through the ten-anomaly validator, and reconciled
+            cleaned through the anomaly validator, and reconciled
             bag-by-bag.
         </div>
         <div class='brand-meta'>
