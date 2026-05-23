@@ -1,6 +1,6 @@
-# WasteX · Operations Dashboard
+# SB-Geocarbon · Operations Dashboard
 
-Polished Streamlit dashboard for the WasteX biochar pipeline. Reads four
+Polished Streamlit dashboard for the SB-Geocarbon biochar pipeline. Reads four
 operational sheets directly from a public Google Spreadsheet, runs the
 ten-anomaly validator, and surfaces KPIs / trends / a triage queue across
 four tabs.
