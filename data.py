@@ -1,5 +1,5 @@
 """
-WasteX dashboard | Data layer.
+SB-Geocarbon dashboard | Data layer.
 
 Reads the four operational sheets from a public Google Spreadsheet 
 """
