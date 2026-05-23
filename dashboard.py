@@ -1,7 +1,7 @@
 """
-WasteX Operations Dashboard
+SB-Geocarbon Operations Dashboard
 ───────────────────────────
-A polished Streamlit application for the WasteX biochar pipeline:
+A polished Streamlit application for the SB-Geocarbon biochar pipeline:
 
 * Reads four operational sheets from a public Google Spreadsheet.
 * Runs the same 10-anomaly validation that the production pipeline uses.
@@ -38,7 +38,7 @@ from theme import (
 # ─────────────────────────────────────────────────────────────────────── #
 
 st.set_page_config(
-    page_title="Salsa | Operations Dashboard",
+    page_title="SB-Geocarbon | Operations Dashboard",
     page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -106,7 +106,7 @@ with st.sidebar:
         "<div style='padding:0.4rem 0 0.6rem 0;'>"
         "<div style='font-family:Fraunces,serif;font-size:1.55rem;"
         "font-weight:500;color:#FBF8F2;letter-spacing:-0.01em;'>"
-        "WasteX <em style='color:#E0A458;font-style:italic;'>Ops</em></div>"
+        "SB-Geocarbon <em style='color:#E0A458;font-style:italic;'>Ops</em></div>"
         "<div style='font-family:JetBrains Mono,monospace;font-size:0.66rem;"
         "letter-spacing:0.18em;color:rgba(244,239,227,0.65);"
         "text-transform:uppercase;margin-top:0.15rem;'>"
@@ -724,7 +724,7 @@ with tab_dq:
 st.markdown(
     f"""
     <div class='app-foot'>
-        <span>WasteX · Operations Dashboard</span>
+        <span>SB-Geocarbon · Operations Dashboard</span>
         <span>Built with Streamlit · Plotly · Editorial Terroir theme</span>
         <span>Data refreshed {bundle.fetched_at:%Y-%m-%d %H:%M}</span>
     </div>
